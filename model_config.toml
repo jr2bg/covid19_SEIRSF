@@ -1,0 +1,17 @@
+n_rows = 100
+n_cols = 100
+radius = 6
+pop_dens = 0.99
+n_cycles = 100
+R_0 = 0.0
+time_contagious = 0
+case_fat_risk = 1.0
+t_I = 0
+p_R = 0.0
+t_F = 0
+t_L = 0
+t_R = 1
+p_S = 0.0
+t_S = 0
+E_in = 3
+I_in = 1
