@@ -1,5 +1,8 @@
 //extern crate rand;
-use serde::Deserialize;
+use std::error::Error;
+use std::path;
+use csv::Writer;
+use serde::{Deserialize, Serialize};
 
 use rand::{thread_rng, Rng};
 use rand::seq::SliceRandom;
@@ -11,7 +14,7 @@ pub struct Pos {
     pub c : usize,
 }
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy,Serialize)]
 pub struct Cell {
     pub n_S : i32,
     pub n_E : i32,
@@ -368,7 +371,17 @@ impl Univ {
     }
 
 
-    pub fn export(&self) {
-        
+    pub fn export(&self, i :i32) -> Result<(), Box<dyn Error>> {
+        let path :String = format!("tests//{i}.csv");
+        let path = path::Path::new(&path);
+        let mut wtr = Writer::from_path(path)?;
+
+        for row in &self.tess {
+            for cell in row {
+                wtr.serialize(cell)?;
+            }
+        }
+        wtr.flush()?;
+        Ok(())
     }
 }

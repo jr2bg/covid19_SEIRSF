@@ -33,6 +33,7 @@ pub fn iter(univ: &mut Univ, config: &Config, persons: &mut Vec<Pers>){
                 displ::retrn(univ, pers);
             }
         }
+        univ.export(i+1);
     }
 
     exp_dec_data::write_results(records_dec);

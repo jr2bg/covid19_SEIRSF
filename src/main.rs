@@ -20,6 +20,7 @@ fn main() {
 
     //println!("population density: {}", config.pop_dens);
     let mut univ:Univ = Univ::init(config.n_rows, config.n_cols);
+    univ.export(0);
 
     /*
     for v in univ.iter() {
