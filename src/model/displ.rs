@@ -38,7 +38,7 @@ pub fn displace(univ: &mut Univ, pers: &mut Pers, config : &Config) {
 
 pub fn retrn(univ: &mut Univ, pers: &mut Pers) {
     let cell = univ.get_cell(&pers.curr_pos);
-    cell.subs_state(&pers.p_state);
+    cell.subs_state(&pers.state);
 
     pers.set_curr_pos(pers.origin_pos);
     pers.set_is_displ(false);

@@ -32,7 +32,7 @@ pub fn iter(univ: &mut Univ, config: &Config, persons: &mut Vec<Pers>){
             if pers.is_displ {
                 displ::retrn(univ, pers);
             }
-            println!("{:?}",pers);
+            //println!("{:?}",pers);
         }
         univ.export(i+1);
     }

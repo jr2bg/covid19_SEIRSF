@@ -21,6 +21,7 @@ pub fn s2e(pers: &mut Pers, univ : &mut Univ, config: &Config){
         pers.set_state(State::E);
         pers.set_t_state(0);
     }
+    pers.set_p_state(State::S);
 }
 
 
