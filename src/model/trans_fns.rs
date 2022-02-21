@@ -8,57 +8,64 @@ use covid19_SEIRSF::State;
 
 // Multiply p_E times the number of elements in E or I in its ngh
 // chech with random number
-pub fn s2e(pers: &mut Pers, univ : &Univ, config: &Config){
+pub fn s2e(pers: &mut Pers, univ : &mut Univ, config: &Config){
     let n_inf_ngbh = univ.get_n_inf_ngbh(&pers.curr_pos, config);
-    let rand_numb : f32 = thread_rng().gen();
+    let rand_numb : f32 = thread_rng().gen::<f32>();
 
     // falta considerar el número total de personas
     // usar dens_pob*n_rows*n_cols
-    if rand_numb > n_inf_ngbh as f32 * config.R_0 / ( config.time_contagious as f32) {
-        pers.set_state(State::S);
+    //if rand_numb <= n_inf_ngbh as f32 * config.R_0 / ( config.time_contagious as f32) {
+    
+    //if rand_numb <= n_inf_ngbh as f32 * config.R_0 {
+    if true {
+        pers.set_state(State::E);
         pers.set_t_state(0);
-    } else {
-        pers.set_p_state(pers.state);
     }
 }
 
 
 pub fn e2i(pers: &mut Pers, p_Is: Vec<f32>){
     // no consideramos un tiempo
-    let rand_numb : f32 = thread_rng().gen();
+    let rand_numb : f32 = thread_rng().gen::<f32>();
 
-    if rand_numb <= p_Is[pers.t_state as usize] {
+    //if rand_numb <= p_Is[pers.t_state as usize] {
+        if rand_numb <= 1.0 {
         // cambiar a cero o 1 el t_state
         pers.set_state(State::I);
         pers.set_t_state(0);
     } else {
-        pers.set_p_state(pers.state);
         pers.add_time_state(1);
     }
+    pers.set_p_state(State::E);
 }
 
 
 pub fn i2rf(pers: &mut Pers, config: &Config) {
-    let rand_numb : f32 = thread_rng().gen();
-    if rand_numb >= config.p_R && pers.t_state >= config.t_R {
+    let rand_numb : f32 = thread_rng().gen::<f32>();
+    if rand_numb <= config.p_R && pers.t_state >= config.t_R {
         // cambiar a cero o 1 el t_state
         pers.set_state(State::R);
         pers.set_t_state(0);
-    } else if rand_numb >= config.case_fat_risk && pers.t_state >= config.t_F {
+    } else if rand_numb <= config.case_fat_risk && pers.t_state >= config.t_F {
         pers.set_state(State::F);
         pers.set_t_state(0); 
     } else {
-        pers.set_p_state(pers.state);
         pers.add_time_state(1);
     }
+    pers.set_p_state(State::I);
 }
 
 
 pub fn r2s(pers: &mut Pers, config: &Config) {
     let rand_numb : f32 = thread_rng().gen();
-    if rand_numb >= config.p_S && pers.t_state >= config.t_S {
+    if rand_numb <= config.p_S && pers.t_state >= config.t_S {
         pers.set_state(State::S);
     }
+    pers.set_p_state(State::R);
+}
+
+pub fn f2f(pers: &mut Pers) {
+    pers.set_p_state(State::F);
 }
 
 // list with the information to get the cdf of the normal distribution specified

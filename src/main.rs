@@ -11,16 +11,26 @@ pub use crate::model::displ;
 use crate::model::total_iter;
 
 fn main() {
+
+    //match fs::remove_dir_all("tests") {
+    //    Ok(()) => (),
+    //    Err(_) => (),
+    //}
+    //println!("start");
+
+    //fs::remove_dir_all("tests");
     
     let content = fs::read_to_string("model_config.toml")
         .expect("Something went wrong reading the file");
+    //println!("after toml config read");
 
     let config : Config = toml::from_str(&content).unwrap();
+    //println!("config toml unwrap");
     //println!("{:?}", config);
 
     //println!("population density: {}", config.pop_dens);
     let mut univ:Univ = Univ::init(config.n_rows, config.n_cols);
-    univ.export(0);
+    //println!("before populate");
 
     /*
     for v in univ.iter() {
@@ -35,14 +45,11 @@ fn main() {
 
     let mut persons = univ.populate(&config);
 
+    //fs::create_dir("tests");
+    univ.export(0);
+
     //println!("{:#?}", univ.tess);
     //println!("{:#?}", persons);
-
-    displ::displace(&mut univ, &mut persons[0], &config);
-
-    //println!("{:#?}", persons[0]);
-
-    displ::retrn(&mut univ, &mut persons[0]);
     //println!("{:#?}", persons[0]);
 
     //covid19_SEIRSF::get_neigh(&univ,5,6, &config);

@@ -13,7 +13,7 @@ pub fn single_evo(univ:&mut Univ, config: &Config, persons:&mut Vec<Pers>){
             State::E => trans_fns::e2i(pers, trans_fns::get_p_Is()),
             State::I => trans_fns::i2rf(pers, config),
             State::R => trans_fns::r2s(pers, config),
-            State::F => (),
+            State::F => trans_fns::f2f(pers),
         }
     }
 

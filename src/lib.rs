@@ -163,7 +163,7 @@ impl Cell {
 
     /// Function to add people in an state of the current cell
     pub fn add_state(&mut self, state : &State){
-        match *state {
+        match state {
             State::S => self.n_S += 1,
             State::E => self.n_E += 1,
             State::I => self.n_I += 1,
@@ -174,7 +174,7 @@ impl Cell {
 
     /// Function to substract people in an state of the current cell
     pub fn subs_state(&mut self, state : &State){
-        match *state {
+        match state {
             State::S => self.n_S -= 1,
             State::E => self.n_E -= 1,
             State::I => self.n_I -= 1,
@@ -223,8 +223,8 @@ impl Univ {
     }
 
 
-    pub fn get_cell(&self, pos : &Pos) -> Cell {
-        self.tess[(*pos).r][(*pos).c]
+    pub fn get_cell(&mut self, pos : &Pos) -> &mut Cell {
+        &mut self.tess[(*pos).r][(*pos).c]
     }
 
 
@@ -340,7 +340,7 @@ impl Univ {
         persons
     }
 
-    pub fn get_n_inf_ngbh(&self, pos : &Pos, config : &Config) -> i32 {
+    pub fn get_n_inf_ngbh(&mut self, pos : &Pos, config : &Config) -> i32 {
         
         let mut n_inf : i32 = 0;
         

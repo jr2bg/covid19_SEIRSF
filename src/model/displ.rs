@@ -5,7 +5,7 @@ use covid19_SEIRSF::Pos;
 
 pub fn displace(univ: &mut Univ, pers: &mut Pers, config : &Config) {
 
-    let cell = &mut univ.get_cell(&pers.origin_pos);
+    let cell =  univ.get_cell(&pers.origin_pos);
     //println!("{:?}", cell);
 
     /*match pers.state {
@@ -22,7 +22,7 @@ pub fn displace(univ: &mut Univ, pers: &mut Pers, config : &Config) {
     //println!("{:?}", curr_pos);
     pers.set_curr_pos(curr_pos);
     
-    let cell = &mut univ.get_cell(&curr_pos);
+    let cell = univ.get_cell(&curr_pos);
     cell.add_state(&pers.state);
     /*match pers.state {
         State::S => cell.n_S += 1,
@@ -37,13 +37,13 @@ pub fn displace(univ: &mut Univ, pers: &mut Pers, config : &Config) {
 
 
 pub fn retrn(univ: &mut Univ, pers: &mut Pers) {
-    let cell = &mut univ.get_cell(&pers.curr_pos);
-    cell.subs_state(&pers.state);
+    let cell = univ.get_cell(&pers.curr_pos);
+    cell.subs_state(&pers.p_state);
 
     pers.set_curr_pos(pers.origin_pos);
     pers.set_is_displ(false);
 
-    let cell = &mut univ.get_cell(&pers.origin_pos);
+    let cell = univ.get_cell(&pers.origin_pos);
     cell.add_state(&pers.state);
 
 }
