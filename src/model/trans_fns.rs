@@ -16,8 +16,7 @@ pub fn s2e(pers: &mut Pers, univ : &mut Univ, config: &Config){
     // usar dens_pob*n_rows*n_cols
     //if rand_numb <= n_inf_ngbh as f32 * config.R_0 / ( config.time_contagious as f32) {
     
-    //if rand_numb <= n_inf_ngbh as f32 * config.R_0 {
-    if true {
+    if rand_numb <= n_inf_ngbh as f32 * config.R_0 {
         pers.set_state(State::E);
         pers.set_t_state(0);
     }
@@ -29,8 +28,7 @@ pub fn e2i(pers: &mut Pers, p_Is: Vec<f32>){
     // no consideramos un tiempo
     let rand_numb : f32 = thread_rng().gen::<f32>();
 
-    //if rand_numb <= p_Is[pers.t_state as usize] {
-        if rand_numb <= 1.0 {
+    if rand_numb <= p_Is[pers.t_state as usize] {
         // cambiar a cero o 1 el t_state
         pers.set_state(State::I);
         pers.set_t_state(0);
