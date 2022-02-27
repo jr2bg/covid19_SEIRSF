@@ -10,13 +10,24 @@ use covid19_SEIRSF::State;
 // chech with random number
 pub fn s2e(pers: &mut Pers, univ : &mut Univ, config: &Config){
     let n_inf_ngbh = univ.get_n_inf_ngbh(&pers.curr_pos, config);
+    // CONSIDER IF WE ONLY TAKE I OR BOTH I AND E
+    let n_inf_cell = univ.get_cell(&pers.curr_pos).n_E + 
+        univ.get_cell(&pers.curr_pos).n_I;
+
     let rand_numb : f32 = thread_rng().gen::<f32>();
+    
+    let tot_pop :f32 = (config.n_cols * config.n_cols) as f32 * 
+        config.pop_dens;
+
+    //let p_e : f32 = config.R_0 / 
+    //    ( tot_pop * config.time_contagious as f32 );
+    let p_e = 0.5;
+
+    let tot_p_e : f32 = (n_inf_ngbh + 2 * n_inf_cell) as f32 *p_e  ;
 
     // falta considerar el número total de personas
     // usar dens_pob*n_rows*n_cols
-    //if rand_numb <= n_inf_ngbh as f32 * config.R_0 / ( config.time_contagious as f32) {
-    
-    if rand_numb <= n_inf_ngbh as f32 * config.R_0 {
+    if rand_numb <= tot_p_e {
         pers.set_state(State::E);
         pers.set_t_state(0);
     }
@@ -41,13 +52,16 @@ pub fn e2i(pers: &mut Pers, p_Is: Vec<f32>){
 
 pub fn i2rf(pers: &mut Pers, config: &Config) {
     let rand_numb : f32 = thread_rng().gen::<f32>();
-    if rand_numb <= config.p_R && pers.t_state >= config.t_R {
+    
+    //} else if rand_numb <= config.case_fat_risk && pers.t_state >= config.t_F {
+    if rand_numb <= config.case_fat_risk{
+        pers.set_state(State::F);
+        pers.set_t_state(0); 
+    //if rand_numb <= config.p_R && pers.t_state >= config.t_R {
+    } else if rand_numb <= config.p_R + config.case_fat_risk {
         // cambiar a cero o 1 el t_state
         pers.set_state(State::R);
         pers.set_t_state(0);
-    } else if rand_numb <= config.case_fat_risk && pers.t_state >= config.t_F {
-        pers.set_state(State::F);
-        pers.set_t_state(0); 
     } else {
         pers.add_time_state(1);
     }

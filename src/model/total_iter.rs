@@ -1,5 +1,3 @@
-use std::num::ParseIntError;
-
 use covid19_SEIRSF::Univ;
 use covid19_SEIRSF::Pers;
 use covid19_SEIRSF::Config;
@@ -15,11 +13,11 @@ pub fn iter(univ: &mut Univ, config: &Config, persons: &mut Vec<Pers>){
         Vec::with_capacity(n_cycles as usize);
 
     for i in 0..n_cycles {
-        //println!("iteration: {}",i);
+
         n_dec = 0;
         for pers in &mut *persons {
             // function to determine if we have to displace the person
-            if pers.will_be_displ() {
+            if pers.will_be_displ(config) {
                 displ::displace(univ, pers, config);
             }
         }
@@ -32,7 +30,7 @@ pub fn iter(univ: &mut Univ, config: &Config, persons: &mut Vec<Pers>){
             if pers.is_displ {
                 displ::retrn(univ, pers);
             }
-            //println!("{:?}",pers);
+
         }
         univ.export(i+1);
     }

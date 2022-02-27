@@ -1,6 +1,5 @@
 use std::error::Error;
 use std::io;
-use std::process;
 
 use serde::Serialize;
 
@@ -24,18 +23,7 @@ pub fn write_results(records : Vec<Record_Dec>) -> Result<(), Box<dyn Error>> {
     for record in records {
         wtr.serialize(record)?;
     }
-    /*wtr.serialize(Record {
-        city: "Southborough".to_string(),
-        region: "MA".to_string(),
-        country: "United States".to_string(),
-        population: Some(9686),
-    })?;
-    wtr.serialize(Record {
-        city: "Northbridge".to_string(),
-        region: "MA".to_string(),
-        country: "United States".to_string(),
-        population: Some(14061),
-    })?;*/
+
     wtr.flush()?;
     Ok(())
 }

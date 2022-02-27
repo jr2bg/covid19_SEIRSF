@@ -1,4 +1,3 @@
-//extern crate rand;
 use std::error::Error;
 use std::path;
 use csv::Writer;
@@ -42,6 +41,7 @@ pub struct Config {
     pub t_S: i32,
     pub E_in: i32,
     pub I_in: i32,
+    pub p_displ: f32,
 }
 
 
@@ -115,10 +115,10 @@ impl Pers{
 
     // posteriormente cambiar esta parte
     // para que considere una probabilidad de desplazamiento
-    pub fn will_be_displ(&self) -> bool {
+    pub fn will_be_displ(&self, config: &Config) -> bool {
         let rand_numb : f32 = thread_rng().gen();
         let res = {
-            if rand_numb <= 0.5 {
+            if rand_numb <= (*config).p_displ {
                 true
             } else {
                 false
@@ -193,18 +193,19 @@ impl Config {
             radius: 0, 
             pop_dens: 0.5, 
             n_cycles: 0, 
-            R_0: 0., 
+            R_0: 0.0, 
             time_contagious: 0, 
-            case_fat_risk: 0., 
+            case_fat_risk: 0.0, 
             t_I: 0, 
-            p_R: 0., 
+            p_R: 0.0, 
             t_F: 0, 
             t_L: 0, 
             t_R: 0, 
-            p_S: 0., 
+            p_S: 0.0, 
             t_S: 0, 
             E_in: 0, 
-            I_in: 0 
+            I_in: 0, 
+            p_displ: 0.5,
         }
     }
 }
@@ -243,30 +244,60 @@ impl Univ {
         n_dec
     }
 
+    pub fn populate_poss_mult_pers_one_cell(
+        &mut self, config : &Config
+    ) -> Vec<Pers> {
+        let n_rows = (*config).n_rows;
+        let n_cols = (*config).n_cols;
+        let tot_cells : i32 = n_cols * n_rows;
+        let tot_pop: i32 = ((*config).pop_dens * (tot_cells as f32)) as i32;
+         // CHECK THIS LATER, MAYBE E_in WON'T BE USED
+         let n_e_in : i32 = (*config).E_in;
+         let n_i_in : i32 = (*config).I_in;
+
+        let mut persons:Vec<Pers> = Vec::with_capacity(tot_pop as usize);
+
+        let mut i:i32 = 0;
+        let mut state : State;
+        let mut pers : Pers;
+        let mut pos : Pos;
+        for _ in 0..tot_pop {
+
+            pos = Pos::new(
+                &(thread_rng().gen_range(0, n_rows) as usize), 
+                &(thread_rng().gen_range(0, n_cols) as usize), 
+                );
+
+            state = { 
+                if i <= n_e_in {State::E} 
+                else if i <= n_e_in + n_i_in {State::I} 
+                else {State::S}
+            };
+
+            pers = Pers::new(pos, state);
+
+            persons.push(pers);
+
+            self.get_cell(&pos).add_state(&state);
+
+            i += 1;
+        }
+
+        persons
+    }
+
     pub fn populate(&mut self, config : &Config) -> Vec<Pers> {
         let tot_cells : i32 = (*config).n_cols * (*config).n_rows;
         let tot_pop: i32 = ((*config).pop_dens * (tot_cells as f32)) as i32;
 
-        /*let mut persons : Vec<Pers> = vec![
-            Pers::new(
-                Pos::new(&0,&0), 
-                Pos::new(&0,&0), 
-                State::S, 
-                0, 
-                false
-            ) ; 
-            tot_pop as usize
-            ];*/
         let mut persons:Vec<Pers> = Vec::with_capacity(tot_pop as usize);
 
         // CHECK THIS LATER, MAYBE E_in WON'T BE USED
         let n_E_in : i32 = (*config).E_in;
         let n_I_in : i32 = (*config).I_in;
         let s_pop : i32 = tot_pop - n_E_in  - n_I_in ; 
-        // println!("susceptible population: {}", s_pop);
 
         let mut pop : Vec<Pos> = vec![ Pos::new(&0,&0) ; tot_cells as usize];
-
 
         for i in 0..(*config).n_rows as usize {
             for j in 0..(*config).n_cols as usize {
@@ -276,23 +307,17 @@ impl Univ {
         
         // shuffle
         pop.shuffle(&mut thread_rng());
-        // println!("{:?}",pop);
 
         // select the first E_in and I_in 
         // later, s_pop will be susceptible
         let mut iterator_pop = pop.iter();
-        //let mut it_perss = persons.iter_mut();
+
         let mut val_it : Pos;
-        //let mut it_pers : Pers;
 
         for i in 0..n_E_in as usize {
             val_it = *iterator_pop.next().unwrap();
-            //it_pers = *it_perss.next().unwrap();
             persons.push(Pers::new(val_it, State::E));
-            //it_pers.set_origin_pos(val_it);
-            //it_pers.set_state(State::E);
-
-            // println!("valor iterator_pop: {:?}", val_it);
+            
             (*self).set_cell(
                 &(val_it), 
                 Cell { 
@@ -308,7 +333,7 @@ impl Univ {
         for i in 0..n_I_in as usize {
             val_it = *iterator_pop.next().unwrap();
             persons.push(Pers::new(val_it, State::I));
-            // println!("valor iterator_pop: {:?}", val_it);
+            
             (*self).set_cell(
                 &(val_it), 
                 Cell { 
@@ -324,7 +349,7 @@ impl Univ {
         for i in 0..s_pop as usize {
             val_it = *iterator_pop.next().unwrap();
             persons.push(Pers::new(val_it, State::S));
-            //println!("valor iterator_pop: {:?}", val_it);
+            
             (*self).set_cell(
                 &(val_it), 
                 Cell { 
