@@ -16,3 +16,4 @@ t_S = 0
 E_in = 200
 I_in = 10
 p_displ = 0.5
+max_people = 4

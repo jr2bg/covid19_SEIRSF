@@ -42,6 +42,7 @@ pub struct Config {
     pub E_in: i32,
     pub I_in: i32,
     pub p_displ: f32,
+    pub max_people: i32,
 }
 
 
@@ -182,6 +183,11 @@ impl Cell {
             State::F => self.n_F -= 1,
         }
     }
+
+    // Function to get the number of people in the cell
+    pub fn get_n_people(&self) -> i32 {
+        self.n_S + self.n_E + self.n_I + self.n_R + self.n_F
+    }
 }
 
 
@@ -206,6 +212,7 @@ impl Config {
             E_in: 0, 
             I_in: 0, 
             p_displ: 0.5,
+            max_people: 4,
         }
     }
 }
@@ -244,6 +251,7 @@ impl Univ {
         n_dec
     }
 
+    // populate universe with possibly more than one person per cell
     pub fn populate_poss_mult_pers_one_cell(
         &mut self, config : &Config
     ) -> Vec<Pers> {
@@ -263,10 +271,11 @@ impl Univ {
         let mut pos : Pos;
         for _ in 0..tot_pop {
 
-            pos = Pos::new(
-                &(thread_rng().gen_range(0, n_rows) as usize), 
-                &(thread_rng().gen_range(0, n_cols) as usize), 
-                );
+            pos = Pos::get_rand_pos(config);
+            // at most config.max_people per cell
+            while self.get_cell(&pos).get_n_people() > config.max_people {
+                pos = Pos::get_rand_pos(config);
+            }
 
             state = { 
                 if i <= n_e_in {State::E} 
@@ -314,7 +323,7 @@ impl Univ {
 
         let mut val_it : Pos;
 
-        for i in 0..n_E_in as usize {
+        for _ in 0..n_E_in as usize {
             val_it = *iterator_pop.next().unwrap();
             persons.push(Pers::new(val_it, State::E));
             
@@ -330,7 +339,7 @@ impl Univ {
             )
         }
 
-        for i in 0..n_I_in as usize {
+        for _ in 0..n_I_in as usize {
             val_it = *iterator_pop.next().unwrap();
             persons.push(Pers::new(val_it, State::I));
             
@@ -346,7 +355,7 @@ impl Univ {
             )
         }
 
-        for i in 0..s_pop as usize {
+        for _ in 0..s_pop as usize {
             val_it = *iterator_pop.next().unwrap();
             persons.push(Pers::new(val_it, State::S));
             
