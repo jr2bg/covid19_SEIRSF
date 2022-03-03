@@ -405,10 +405,9 @@ impl Univ {
     }
 
 
-    pub fn export(&self, i :i32) -> Result<(), Box<dyn Error>> {
-        let path :String = format!("tests//{i}.csv");
-        let path = path::Path::new(&path);
-        let mut wtr = Writer::from_path(path)?;
+    pub fn export(&self, i :i32, folder : &path::PathBuf) -> Result<(), Box<dyn Error>> {
+        let file = folder.join(format!("{}.csv", i));
+        let mut wtr = Writer::from_path(file)?;
 
         for row in &self.tess {
             for cell in row {

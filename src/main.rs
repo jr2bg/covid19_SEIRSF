@@ -1,7 +1,6 @@
-use covid19_SEIRSF::Cell;
 use covid19_SEIRSF::Univ;
 use covid19_SEIRSF::Config;
-use std::fs;
+use std::{fs, path};
 use toml;
 
 mod model;
@@ -19,8 +18,10 @@ fn main() {
 
     let mut persons = univ.populate_poss_mult_pers_one_cell(&config);
 
-    univ.export(0);
+    let folder = total_iter::create_folder(); 
 
-    total_iter::iter(&mut univ, &config, &mut persons);
+    univ.export(0, &folder);
+
+    total_iter::iter(&mut univ, &config, &mut persons, &folder);
     
 }

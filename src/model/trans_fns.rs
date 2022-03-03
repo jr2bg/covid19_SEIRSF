@@ -19,11 +19,12 @@ pub fn s2e(pers: &mut Pers, univ : &mut Univ, config: &Config){
     let tot_pop :f32 = (config.n_cols * config.n_cols) as f32 * 
         config.pop_dens;
 
-    //let p_e : f32 = config.R_0 / 
-    //    ( tot_pop * config.time_contagious as f32 );
-    let p_e = 0.5;
+    let p_e : f32 = config.R_0 / 
+        ( tot_pop * config.time_contagious as f32 );
+    //let p_e = 0.5;
+    let p_e_cell:f32 = get_cum_p_e_cell(p_e, n_inf_cell);
 
-    let tot_p_e : f32 = (n_inf_ngbh + 2 * n_inf_cell) as f32 *p_e  ;
+    let tot_p_e : f32 = n_inf_ngbh as f32 *p_e  + p_e_cell;
 
     // falta considerar el número total de personas
     // usar dens_pob*n_rows*n_cols
@@ -143,4 +144,9 @@ pub fn get_p_R(t: i32) -> f32 {
         return 0.557634;
     }
     return 0.557634;
+}
+
+// iid events
+pub fn get_cum_p_e_cell(p_e : f32, n_inf_cell : i32) -> f32 {
+    1.0 - (1.0-p_e).powi(n_inf_cell)
 }
