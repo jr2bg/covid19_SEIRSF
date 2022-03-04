@@ -47,7 +47,8 @@ pub fn iter(
 pub fn create_folder()-> path::PathBuf {
     let now: chrono::DateTime<chrono::Utc> = chrono::Utc::now();
     let folder = format!("{}",now.format("%Y%m%d_%H%M%S"));
-    let folder = path::PathBuf::from(&folder);
+    let folder = path::Path::new("data_runs").join(&folder);
+    //let folder = path::PathBuf::from(&folder);
 
     fs::create_dir(&folder).unwrap();
     
