@@ -5,8 +5,8 @@ use serde::Serialize;
 
 #[derive(Debug, Serialize)]
 pub struct RecordDec {
-    time : i32,
-    total_n_dec : i32,
+    time: i32,
+    total_n_dec: i32,
 }
 
 impl RecordDec {
@@ -15,7 +15,7 @@ impl RecordDec {
     }
 }
 
-pub fn write_results(records : Vec<RecordDec>) -> Result<(), Box<dyn Error>> {
+pub fn write_results(records: Vec<RecordDec>) -> Result<(), Box<dyn Error>> {
     let mut wtr = csv::Writer::from_writer(io::stdout());
 
     // When writing records with Serde using structs, the header row is written
