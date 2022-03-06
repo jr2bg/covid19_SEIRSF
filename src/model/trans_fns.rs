@@ -23,8 +23,10 @@ pub fn s2e(pers: &mut Pers, univ : &mut Univ, config: &Config){
         ( tot_pop * config.time_contagious as f32 );
     //let p_e = 0.5;
     let p_e_cell:f32 = get_cum_p_e_cell(p_e, n_inf_cell);
+    let p_e_neigh: f32 = n_inf_ngbh as f32 *p_e;
 
-    let tot_p_e : f32 = n_inf_ngbh as f32 *p_e  + p_e_cell;
+    // union of independent events
+    let tot_p_e : f32 = p_e_neigh + p_e_cell - p_e_cell*p_e_neigh;
 
     // falta considerar el número total de personas
     // usar dens_pob*n_rows*n_cols
@@ -36,11 +38,11 @@ pub fn s2e(pers: &mut Pers, univ : &mut Univ, config: &Config){
 }
 
 
-pub fn e2i(pers: &mut Pers, p_Is: Vec<f32>){
+pub fn e2i(pers: &mut Pers, ps_i: Vec<f32>){
     // no consideramos un tiempo
     let rand_numb : f32 = thread_rng().gen::<f32>();
 
-    if rand_numb <= p_Is[pers.t_state as usize] {
+    if rand_numb <= ps_i[pers.t_state as usize] {
         // cambiar a cero o 1 el t_state
         pers.set_state(State::I);
         pers.set_t_state(0);
@@ -59,7 +61,7 @@ pub fn i2rf(pers: &mut Pers, config: &Config) {
         pers.set_state(State::F);
         pers.set_t_state(0); 
     //if rand_numb <= config.p_R && pers.t_state >= config.t_R {
-    } else if rand_numb <= config.p_R + config.case_fat_risk {
+    } else if rand_numb <= get_p_R(pers.t_state) + config.case_fat_risk {
         // cambiar a cero o 1 el t_state
         pers.set_state(State::R);
         pers.set_t_state(0);

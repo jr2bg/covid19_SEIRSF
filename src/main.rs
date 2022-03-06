@@ -1,6 +1,6 @@
 use covid19_SEIRSF::Univ;
 use covid19_SEIRSF::Config;
-use std::{fs, path};
+use std::fs;
 use toml;
 
 mod model;
@@ -20,7 +20,10 @@ fn main() {
 
     let folder = total_iter::create_folder(); 
 
-    univ.export(0, &folder);
+    match univ.export(0, &folder) {
+        Ok(_) => (),
+        Err(_) => println!("couldn't export universe"),
+    };
 
     total_iter::iter(&mut univ, &config, &mut persons, &folder);
     
