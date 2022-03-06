@@ -23,7 +23,8 @@ pub fn s2e(pers: &mut Pers, univ : &mut Univ, config: &Config){
         ( tot_pop * config.time_contagious as f32 );
     //let p_e = 0.5;
     let p_e_cell:f32 = get_cum_p_e_cell(p_e, n_inf_cell);
-    let p_e_neigh: f32 = n_inf_ngbh as f32 *p_e;
+    //let p_e_neigh: f32 = n_inf_ngbh as f32 *p_e;
+    let p_e_neigh:f32 = get_cum_geo_distr(p_e, n_inf_ngbh);
 
     // union of independent events
     let tot_p_e : f32 = p_e_neigh + p_e_cell - p_e_cell*p_e_neigh;
@@ -38,7 +39,8 @@ pub fn s2e(pers: &mut Pers, univ : &mut Univ, config: &Config){
 }
 
 
-pub fn e2i(pers: &mut Pers, ps_i: Vec<f32>){
+pub fn e2i(pers: &mut Pers){
+    let ps_i: Vec<f32> = get_ps_i();
     // no consideramos un tiempo
     let rand_numb : f32 = thread_rng().gen::<f32>();
 
@@ -61,7 +63,7 @@ pub fn i2rf(pers: &mut Pers, config: &Config) {
         pers.set_state(State::F);
         pers.set_t_state(0); 
     //if rand_numb <= config.p_R && pers.t_state >= config.t_R {
-    } else if rand_numb <= get_p_R(pers.t_state) + config.case_fat_risk {
+    } else if rand_numb <= get_p_r(pers.t_state) + config.case_fat_risk {
         // cambiar a cero o 1 el t_state
         pers.set_state(State::R);
         pers.set_t_state(0);
@@ -86,7 +88,7 @@ pub fn f2f(pers: &mut Pers) {
 
 // list with the information to get the cdf of the normal distribution specified
 // in the article Lauer et al 2020
-pub fn get_p_Is() -> Vec<f32>{
+pub fn get_ps_i() -> Vec<f32>{
     vec![
         9.999999999999995e-05,
         0.005069057888351579,
@@ -124,7 +126,7 @@ pub fn get_p_Is() -> Vec<f32>{
 }
 
 
-pub fn get_p_R(t: i32) -> f32 {
+pub fn get_p_r(t: i32) -> f32 {
 
     if t < 10 {
         return 0.0 ;
@@ -148,7 +150,20 @@ pub fn get_p_R(t: i32) -> f32 {
     return 0.557634;
 }
 
-// iid events
+// iid events inside cell of person of interest
 pub fn get_cum_p_e_cell(p_e : f32, n_inf_cell : i32) -> f32 {
     1.0 - (1.0-p_e).powi(n_inf_cell)
+}
+
+// iid events for _external_ neighbourhood
+pub fn get_geo_distr(p:f32 , k :i32) -> f32{
+    (1.0-p).powi(k-1) * p
+}
+
+pub fn get_cum_geo_distr(p:f32, n:i32) -> f32 {
+    let mut p_tot:f32 = 0.0;
+    for k in 0..n {
+        p_tot += get_geo_distr(p, k)
+    }
+    return p_tot;
 }
