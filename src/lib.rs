@@ -43,6 +43,7 @@ pub struct Config {
     pub I_in: i32,
     pub p_displ: f32,
     pub max_people: i32,
+    pub p_e: f32,
 }
 
 pub struct Univ {
@@ -205,7 +206,17 @@ impl Config {
             I_in: 0,
             p_displ: 0.5,
             max_people: 4,
+            p_e: 0.0,
         }
+    }
+
+    pub fn get_p_e(&mut self) {
+        let radius : f32 = self.radius as f32;
+        let time_contagious: f32 = self.time_contagious as f32;
+        let n_pers_neigh: f32 = 
+            self.pop_dens * ((2.0*radius + 1.0).powi(2) - 1.0);
+            
+        self.p_e = self.R_0 / (n_pers_neigh  * time_contagious);
     }
 }
 

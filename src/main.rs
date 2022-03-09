@@ -11,7 +11,8 @@ fn main() {
     let content =
         fs::read_to_string("model_config.toml").expect("Something went wrong reading the file");
 
-    let config: Config = toml::from_str(&content).unwrap();
+    let mut config: Config = toml::from_str(&content).unwrap();
+    config.get_p_e();
 
     let mut univ: Univ = Univ::init(config.n_rows, config.n_cols);
 

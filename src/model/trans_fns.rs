@@ -14,10 +14,13 @@ pub fn s2e(pers: &mut Pers, univ: &mut Univ, config: &Config) {
     let n_inf_cell = univ.get_cell(&pers.curr_pos).n_E + univ.get_cell(&pers.curr_pos).n_I;
 
     let rand_numb: f32 = thread_rng().gen::<f32>();
-
-    let tot_pop: f32 = (config.n_cols * config.n_cols) as f32 * config.pop_dens;
-
-    let p_e: f32 = config.R_0 / (tot_pop * config.time_contagious as f32);
+    // población total??
+    //let tot_pop: f32 = (config.n_cols * config.n_cols) as f32 * config.pop_dens;
+    //let p_e: f32 = config.R_0 / (tot_pop * config.time_contagious as f32);
+    //let radius : i32 = config.radius;
+    //let n_pers_neigh: i32 = (config.pop_dens * ((2.0*radius as f32 + 1.0).powi(2) - 1.0)) as i32;
+    //let p_e: f32 = config.R_0 / (n_pers_neigh as f32 * config.time_contagious as f32);
+    let p_e: f32 = config.p_e;
     //let p_e = 0.5;
     let p_e_cell: f32 = get_cum_p_e_cell(p_e, n_inf_cell);
     //let p_e_neigh: f32 = n_inf_ngbh as f32 *p_e;
