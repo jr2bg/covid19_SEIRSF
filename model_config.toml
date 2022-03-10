@@ -1,5 +1,5 @@
-n_rows = 400
-n_cols = 400
+n_rows = 100
+n_cols = 100
 radius = 3
 pop_dens = 0.96
 n_cycles = 400

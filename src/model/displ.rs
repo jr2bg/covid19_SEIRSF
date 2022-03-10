@@ -5,11 +5,11 @@ use covid19_SEIRSF::Univ;
 
 pub fn displace(univ: &mut Univ, pers: &mut Pers, config: &Config) {
     let mut curr_pos: Pos = Pos::get_rand_pos(config);
-    /*
+    
     while univ.get_cell(&curr_pos).get_n_people() > config.max_people{
         curr_pos = Pos::get_rand_pos(config);
     }
-    */
+    
     let cell = univ.get_cell(&pers.origin_pos);
     cell.subs_state(&pers.state);
 

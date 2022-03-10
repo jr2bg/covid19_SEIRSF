@@ -19,6 +19,7 @@ fn main() {
     let mut persons = univ.populate_poss_mult_pers_one_cell(&config);
 
     let folder = total_iter::create_folder();
+    config.export(&folder);
 
     match univ.export(0, &folder) {
         Ok(_) => (),

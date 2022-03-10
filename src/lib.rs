@@ -2,6 +2,7 @@ use csv::Writer;
 use serde::{Deserialize, Serialize};
 use std::error::Error;
 use std::path;
+use std::fs;
 
 use rand::seq::SliceRandom;
 use rand::{thread_rng, Rng};
@@ -22,7 +23,7 @@ pub struct Cell {
     pub n_F: i32,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct Config {
     pub n_rows: i32,
     pub n_cols: i32,
@@ -213,10 +214,18 @@ impl Config {
     pub fn get_p_e(&mut self) {
         let radius : f32 = self.radius as f32;
         let time_contagious: f32 = self.time_contagious as f32;
+        // approximate number of people in the neighbourhood
         let n_pers_neigh: f32 = 
             self.pop_dens * ((2.0*radius + 1.0).powi(2) - 1.0);
             
         self.p_e = self.R_0 / (n_pers_neigh  * time_contagious);
+    }
+
+    pub fn export(&self, folder: &path::PathBuf) {
+        let filename = folder.join("model_config.toml");
+        let toml_string = toml::to_string(self).expect("Could not encode TOML value");
+        println!("{}", toml_string);
+        fs::write(filename, toml_string).expect("Could not write to file!");
     }
 }
 

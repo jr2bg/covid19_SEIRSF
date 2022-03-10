@@ -36,10 +36,16 @@ pub fn iter(univ: &mut Univ, config: &Config, persons: &mut Vec<Pers>, folder: &
         };
     }
 
-    match exp_dec_data::write_results(records_dec) {
+    match exp_dec_data::write_results(records_dec, &folder) {
         Ok(_) => (),
         Err(_) => println!("couldn't export decease time series"),
     };
+    /*
+    match exp_dec_data::copy_config(&folder) {
+        Ok(_) => (),
+        Err(_) => println!("couldnt export configuration"),
+    };
+    */
 }
 
 pub fn create_folder() -> path::PathBuf {
