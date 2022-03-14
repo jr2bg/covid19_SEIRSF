@@ -1,9 +1,9 @@
-n_rows = 100
-n_cols = 100
+n_rows = 400
+n_cols = 400
 radius = 3
 pop_dens = 0.96
-n_cycles = 400
-R_0 = 1.5
+n_cycles = 700
+R_0 = 3.0
 time_contagious = 10
 case_fat_risk = 0.1
 t_I = 8

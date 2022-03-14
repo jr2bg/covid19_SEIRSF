@@ -49,9 +49,12 @@ pub fn iter(univ: &mut Univ, config: &Config, persons: &mut Vec<Pers>, folder: &
 }
 
 pub fn create_folder() -> path::PathBuf {
+    let folderpath = path::PathBuf::from(
+        r"G:\Mi unidad\Tesis\A22\models\covid19_SEIRSF\data_runs"
+    );
     let now: chrono::DateTime<chrono::Utc> = chrono::Utc::now();
     let folder = format!("{}", now.format("%Y%m%d_%H%M%S"));
-    let folder = path::Path::new("data_runs").join(&folder);
+    let folder = folderpath.join(&folder);
     //let folder = path::PathBuf::from(&folder);
 
     fs::create_dir(&folder).unwrap();
