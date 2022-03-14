@@ -4,12 +4,14 @@ En este proyecto, se usará un modelo de _autómata celular_ (AC) para el covid-
 
 ## Objetivos
 ### Objetivo general
+- [] Determinar ...
 
 ### Objetivos específicos
-- [x] Comparar resultados del modelo con datos reales
+- [x] Comparar resultados del modelo con datos reales (para algunos casos)
+- [ ] Probar con distintos valores de `p_e`, `R_0`
 
 ## Hipótesis
-El gobierno mexicano pudo tomar otras medidas para disminuir el número de fallecidos por covid-19.
+Existen medidas que al ser implementadas pueden disminuir el número de fallecidos por covid-19.
 
 ## Modelo
 
@@ -42,7 +44,7 @@ graph LR
 ```
 >Nota: este diagrama está algo incompleto, en cada iteración tenemos esas probabilidades. No es la probabilidad acumulada
 
-Algo más realista sería considerar una *cadena de Markov*
+Algo más realista sería considerar una *cadena de Markov*, o _proceso estocástico_.
 ```mermaid
 graph LR
     S(Susceptible) --> |p_e|E(Expuesto)
@@ -53,12 +55,12 @@ graph LR
     S --> |1-p_e|S
     E --> |"1-p_i(t)"|E
     I --> |"1-p_r(t)-p_f"|I
-    F --> |p=1|F
+    F --> |1|F
     R --> |"1-p_s(t)"|R
 ```
 Sin embargo, existen aún dudas respecto a la función de transición para el estado **Infectado**.
 
 En este caso, el tiempo de incubación tiene que ver con el tiempo para pasar de **Expuesto** a **Infectado**.
 
-
-
+## Resultados
+El desarrollo del trabajo puede consultarse en este [link](https://colab.research.google.com/drive/1v3FekVwXWa2tei9MpZKhAYlXvtUbW5AB#scrollTo=Qivco0Q-J8KP).
