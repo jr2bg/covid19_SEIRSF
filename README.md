@@ -62,5 +62,18 @@ Sin embargo, existen aún dudas respecto a la función de transición para el es
 
 En este caso, el tiempo de incubación tiene que ver con el tiempo para pasar de **Expuesto** a **Infectado**.
 
+> Nota: preguntar si puede ser como se muestra a continuación
+
+```mermaid
+graph LR
+    S(Susceptible) --> |p_e|E(Expuesto)
+    E --> |"p_i(t)"|I(Infectado)
+    I --> |"p_r(t)"|S
+    I --> |p_f|F(Fallecido)
+    S --> |1-p_e|S
+    E --> |"1-p_i(t)"|E
+    I --> |"1-p_r(t)-p_f"|I
+    F --> |1|F 
+```
 ## Resultados
 El desarrollo del trabajo puede consultarse en este [link](https://colab.research.google.com/drive/1v3FekVwXWa2tei9MpZKhAYlXvtUbW5AB#scrollTo=Qivco0Q-J8KP).
