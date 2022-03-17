@@ -387,14 +387,16 @@ impl Univ {
         let n_rows = config.n_rows;
         let n_cols = config.n_cols;
         let radius = (*config).radius;
+        let pr: i32 = pos.r as i32;
+        let pc: i32 = pos.c as i32;
 
-        for r in n_rows - radius..n_rows + radius + 1 {
-            for c in n_cols - radius..n_rows + radius + 1 {
+        for r in pr - radius..pr + radius + 1 {
+            for c in pc - radius..pc + radius + 1 {
                 if r < 0
                     || c < 0
                     || r >= n_rows
                     || c >= n_cols
-                    || (r == pos.r as i32 && c == pos.c as i32)
+                    || (r == pr && c == pc)
                 {
                     continue;
                 }
