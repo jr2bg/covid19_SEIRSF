@@ -2,4 +2,5 @@
 /tests
 /data_runs
 *.csv
+*.ps1
 model_config.toml
