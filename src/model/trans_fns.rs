@@ -13,8 +13,8 @@ pub fn s2e(pers: &mut Pers, univ: &mut Univ, config: &Config) {
     // CONSIDER IF WE ONLY TAKE I OR BOTH I AND E
     let n_inf_cell = univ.get_cell(&pers.curr_pos).n_E + univ.get_cell(&pers.curr_pos).n_I;
     let rand_numb: f32 = thread_rng().gen::<f32>();
-    let p_e: f32 = 0.001;
-    //let p_e: f32 = config.p_e;
+    //let p_e: f32 = 0.001;
+    let p_e: f32 = config.p_e;
     //let p_e_cell: f32 = 0.0;
     let p_e_cell: f32 = get_cum_p_e_cell(p_e, n_inf_cell);
     //let p_e_neigh: f32 = 0.0;
@@ -72,8 +72,8 @@ pub fn i2sf(pers: &mut Pers, config: &Config) {
     if rand_numb <= config.case_fat_risk {
         pers.set_state(State::F);
         pers.set_t_state(0);
-    //} else if rand_numb <= get_p_r(pers.t_state) + config.case_fat_risk {
-    } else if rand_numb <= 0.25 + config.case_fat_risk {
+    } else if rand_numb <= get_p_r(pers.t_state) + config.case_fat_risk {
+    //} else if rand_numb <= 0.25 + config.case_fat_risk {
         // cambiar a cero o 1 el t_state
         pers.set_state(State::S);
         pers.set_t_state(0);
