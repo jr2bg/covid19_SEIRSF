@@ -29,8 +29,7 @@ Esta probabilidad depende del tiempo.
 
 * `p_f` es la probabilidad de que la persona en Infectado pase a Fallecido.
 
-* `p_s(t)` es la probabilidad de que la persona en Recuperado pase a Susceptible.
-Esta probabilidad depende del tiempo.
+* `p_s` es la probabilidad de que la persona en Recuperado pase a Susceptible.
 
 
 
@@ -40,7 +39,7 @@ graph LR
     E --> |"p_i(t)"|I(Infectado)
     I --> |"p_r(t)"|R(Recuperado)
     I --> |p_f|F(Fallecido)
-    R -->|"p_s(t)"| S
+    R -->|"p_s"| S
 ```
 >Nota: este diagrama está algo incompleto, en cada iteración tenemos esas probabilidades. No es la probabilidad acumulada
 
@@ -51,12 +50,12 @@ graph LR
     E --> |"p_i(t)"|I(Infectado)
     I --> |"p_r(t)"|R(Recuperado)
     I --> |p_f|F(Fallecido)
-    R --> |"p_s(t)"| S
+    R --> |"p_s"| S
     S --> |1-p_e|S
     E --> |"1-p_i(t)"|E
     I --> |"1-p_r(t)-p_f"|I
     F --> |1|F
-    R --> |"1-p_s(t)"|R
+    R --> |"1-p_s"|R
 ```
 Sin embargo, existen aún dudas respecto a la función de transición para el estado **Infectado**.
 

@@ -3,4 +3,5 @@
 /data_runs
 *.csv
 *.ps1
+model_config copy.toml
 model_config.toml
