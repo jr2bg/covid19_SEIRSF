@@ -75,4 +75,4 @@ graph LR
     F --> |1|F 
 ```
 ## Resultados
-El desarrollo del trabajo puede consultarse en este [link](https://colab.research.google.com/drive/1v3FekVwXWa2tei9MpZKhAYlXvtUbW5AB#scrollTo=Qivco0Q-J8KP).
+El desarrollo del trabajo puede consultarse en este [link](https://colab.research.google.com/drive/1dQ1IzfksXKOPKKdMheemBoCdNQRtMEH4#scrollTo=qfjUKLjkT6Yw).
