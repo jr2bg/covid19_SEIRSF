@@ -431,4 +431,50 @@ impl Univ {
         wtr.flush()?;
         Ok(())
     }
+
+    pub fn read_imported_univ(
+        & mut self,
+        path: &path::PathBuf, 
+        config: &Config
+    ) -> Result<Vec<Pers>, Box<dyn Error>> {
+
+        let mut persons: Vec<Pers> = Vec::new();
+
+        let mut rdr = csv::ReaderBuilder::new()
+            .has_headers(false)
+            .from_path(path)?;
+        
+        let records = rdr
+            .records()
+            .collect::<Result<Vec<csv::StringRecord>, csv::Error>>()?;
+
+        for i in 0..records.len() {
+            for j in 0..records[i].len() {
+                match &records[i][j] {
+                    "1" => {
+                            persons.push(Pers::new(Pos::new(&i, &j), State::S));
+                            self.get_cell(&Pos::new(&i,&j))
+                            .add_state(&State::S);
+                        },
+                    _   => continue,
+                }
+            }
+        }
+        
+        persons.shuffle(&mut thread_rng());
+
+        for i in 0..config.E_in as usize {
+            persons[i].set_state(State::E);
+            self.get_cell(&persons[i].curr_pos).subs_state(&State::S);
+            self.get_cell(&persons[i].curr_pos).add_state(&State::E);
+        }
+
+        for i in 0..config.I_in as usize {
+            persons[i + config.E_in as usize].set_state(State::I);
+            self.get_cell(&persons[i + config.E_in as usize].curr_pos).subs_state(&State::S);
+            self.get_cell(&persons[i + config.E_in as usize].curr_pos).add_state(&State::I);
+        }
+
+        Ok(persons)
+    }
 }

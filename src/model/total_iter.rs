@@ -30,10 +30,10 @@ pub fn iter(univ: &mut Univ, config: &Config, persons: &mut Vec<Pers>, folder: &
                 displ::retrn(univ, pers);
             }
         }
-        match univ.export(i + 1, folder) {
+        /*match univ.export(i + 1, folder) {
             Ok(_) => (),
             Err(_) => println!("couldn't export universe data"),
-        };
+        };*/
     }
 
     match exp_dec_data::write_results(records_dec, &folder) {
@@ -51,7 +51,7 @@ pub fn iter(univ: &mut Univ, config: &Config, persons: &mut Vec<Pers>, folder: &
 pub fn create_folder() -> path::PathBuf {
     let folderpath = path::PathBuf::from(
         //r"G:\Mi unidad\Tesis\A22\models\covid19_SEIRSF\data_runs"
-        r"D:\rust\thesis\data_runs"
+        r"E:\rust\thesis\data_runs"
     );
     let now: chrono::DateTime<chrono::Utc> = chrono::Utc::now();
     let folder = format!("{}", now.format("%Y%m%d_%H%M%S"));
