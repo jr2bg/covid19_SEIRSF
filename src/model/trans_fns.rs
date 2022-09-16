@@ -49,13 +49,15 @@ pub fn e2i(pers: &mut Pers) {
 
 pub fn i2rf(pers: &mut Pers, config: &Config) {
     let rand_numb: f32 = thread_rng().gen::<f32>();
+    // let fat_risk = config.case_fat_risk;
+    let fat_risk = get_p_f(pers.t_state);
 
     //} else if rand_numb <= config.case_fat_risk && pers.t_state >= config.t_F {
-    if rand_numb <= config.case_fat_risk {
+    if rand_numb <= fat_risk {
         pers.set_state(State::F);
         pers.set_t_state(0);
     //if rand_numb <= config.p_R && pers.t_state >= config.t_R {
-    } else if rand_numb <= get_p_r(pers.t_state) + config.case_fat_risk {
+    } else if rand_numb <= get_p_r(pers.t_state) + fat_risk {
         // cambiar a cero o 1 el t_state
         pers.set_state(State::R);
         pers.set_t_state(0);
@@ -155,4 +157,18 @@ pub fn get_cum_geo_distr(p: f32, n: i32) -> f32 {
         p_tot += get_geo_distr(p, k)
     }
     return p_tot;
+}
+
+/// Returns the death probability p_F given a time
+/// 
+/// As the CA requires transition functions, the p_F corresponds to the 
+/// probability of passing from I to F in one iteration. Here, we consider
+/// p_F as a function of time
+pub fn get_p_f(t: i32) -> f32 {
+    match t {
+        6 | 7 | 14 | 15 => 0.00001,
+        8 | 9 | 12 | 13 => 0.00005,
+        10 | 11 => 0.0001,
+        _ => 0.0,
+    }
 }
