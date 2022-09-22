@@ -23,6 +23,13 @@ pub fn s2e(pers: &mut Pers, univ: &mut Univ, config: &Config) {
     // union of independent events
     let tot_p_e: f32 = p_e_neigh + p_e_cell - p_e_cell * p_e_neigh;
 
+    // depending the number of munimun infectious people there will be a change
+    // in state or not
+    if n_inf_ngbh < config.min_infectious {
+        pers.set_p_state(State::S);
+        return;
+    }
+
     // falta considerar el número total de personas
     // usar dens_pob*n_rows*n_cols
     if rand_numb <= tot_p_e {

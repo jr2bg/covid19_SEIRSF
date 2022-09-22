@@ -45,6 +45,7 @@ pub struct Config {
     pub p_displ: f32,
     pub max_people: i32,
     pub p_e: f32,
+    pub min_infectious: i32,
 }
 
 pub struct Univ {
@@ -208,6 +209,7 @@ impl Config {
             p_displ: 0.5,
             max_people: 4,
             p_e: 0.0,
+            min_infectious: 1,
         }
     }
 
