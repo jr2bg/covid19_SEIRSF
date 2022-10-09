@@ -21,14 +21,17 @@ pub fn s2e(pers: &mut Pers, univ: &mut Univ, config: &Config) {
     let p_e_neigh: f32 = get_cum_geo_distr(p_e, n_inf_ngbh);
 
     // union of independent events
-    let tot_p_e: f32 = p_e_neigh + p_e_cell - p_e_cell * p_e_neigh;
+    // let tot_p_e: f32 = p_e_neigh + p_e_cell - p_e_cell * p_e_neigh;
+    let tot_p_e: f32 = n_inf_cell as f32 / 8.0;
 
+    /*
     // depending the number of munimun infectious people there will be a change
     // in state or not
     if n_inf_ngbh < config.min_infectious {
         pers.set_p_state(State::S);
         return;
     }
+    */
 
     // falta considerar el número total de personas
     // usar dens_pob*n_rows*n_cols
@@ -56,8 +59,8 @@ pub fn e2i(pers: &mut Pers) {
 
 pub fn i2rf(pers: &mut Pers, config: &Config) {
     let rand_numb: f32 = thread_rng().gen::<f32>();
-    // let fat_risk = config.case_fat_risk;
-    let fat_risk = get_p_f(pers.t_state);
+    let fat_risk = config.case_fat_risk;
+    // let fat_risk = get_p_f(pers.t_state);
 
     //} else if rand_numb <= config.case_fat_risk && pers.t_state >= config.t_F {
     if rand_numb <= fat_risk {
