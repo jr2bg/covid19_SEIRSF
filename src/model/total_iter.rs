@@ -3,6 +3,7 @@ use std::{fs, path};
 use covid19_SEIRSF::Config;
 use covid19_SEIRSF::Pers;
 use covid19_SEIRSF::Univ;
+use covid19_SEIRSF::State;
 
 use crate::displ;
 use crate::model::exp_dec_data;
@@ -16,7 +17,7 @@ pub fn iter(univ: &mut Univ, config: &Config, persons: &mut Vec<Pers>, folder: &
     for i in 0..n_cycles {
         for pers in &mut *persons {
             // function to determine if we have to displace the person
-            if pers.will_be_displ(config) {
+            if pers.state != State::F && pers.will_be_displ(config) {
                 displ::displace(univ, pers, config);
             }
         }

@@ -54,7 +54,7 @@ pub struct Univ {
     pub tess: Vec<Vec<Cell>>,
 }
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub enum State {
     S,
     E,
@@ -188,7 +188,7 @@ impl Cell {
 
     // Function to get the number of people in the cell
     pub fn get_n_people(&self) -> i32 {
-        self.n_S + self.n_E + self.n_I + self.n_R + self.n_F
+        self.n_S + self.n_E + self.n_I + self.n_Q + self.n_R + self.n_F
     }
 }
 
