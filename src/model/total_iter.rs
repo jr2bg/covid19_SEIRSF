@@ -10,7 +10,7 @@ use crate::model::exp_dec_data;
 use crate::model::one_iter;
 
 pub fn iter(univ: &mut Univ, config: &Config, persons: &mut Vec<Pers>, folder: &path::PathBuf) {
-    let mut n_dec: i32;
+    let mut n_dec: i32 = 0;
     let n_cycles: i32 = (*config).n_cycles;
     let mut records_dec: Vec<exp_dec_data::RecordDec> = Vec::with_capacity(n_cycles as usize);
 
@@ -23,7 +23,7 @@ pub fn iter(univ: &mut Univ, config: &Config, persons: &mut Vec<Pers>, folder: &
         }
 
         one_iter::single_evo(univ, config, persons);
-        n_dec = univ.get_n_dec();
+        n_dec += univ.get_n_dec();
         records_dec.push(exp_dec_data::RecordDec::new(i, n_dec));
 
         for pers in &mut *persons {
