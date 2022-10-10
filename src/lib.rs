@@ -19,6 +19,7 @@ pub struct Cell {
     pub n_S: i32,
     pub n_E: i32,
     pub n_I: i32,
+    pub n_Q: i32,
     pub n_R: i32,
     pub n_F: i32,
 }
@@ -46,6 +47,7 @@ pub struct Config {
     pub max_people: i32,
     pub p_e: f32,
     pub min_infectious: i32,
+    pub p_q: f32,
 }
 
 pub struct Univ {
@@ -57,6 +59,7 @@ pub enum State {
     S,
     E,
     I,
+    Q,
     R,
     F,
 }
@@ -153,6 +156,7 @@ impl Cell {
             n_S: 0,
             n_E: 0,
             n_I: 0,
+            n_Q: 0,
             n_R: 0,
             n_F: 0,
         }
@@ -164,6 +168,7 @@ impl Cell {
             State::S => self.n_S += 1,
             State::E => self.n_E += 1,
             State::I => self.n_I += 1,
+            State::Q => self.n_Q += 1,
             State::R => self.n_R += 1,
             State::F => self.n_F += 1,
         }
@@ -175,6 +180,7 @@ impl Cell {
             State::S => self.n_S -= 1,
             State::E => self.n_E -= 1,
             State::I => self.n_I -= 1,
+            State::Q => self.n_Q -= 1, 
             State::R => self.n_R -= 1,
             State::F => self.n_F -= 1,
         }
@@ -210,6 +216,7 @@ impl Config {
             max_people: 4,
             p_e: 0.0,
             min_infectious: 1,
+            p_q: 0.1,
         }
     }
 
@@ -342,6 +349,7 @@ impl Univ {
                     n_S: 0,
                     n_E: 1,
                     n_I: 0,
+                    n_Q: 0,
                     n_R: 0,
                     n_F: 0,
                 },
@@ -358,6 +366,7 @@ impl Univ {
                     n_S: 0,
                     n_E: 0,
                     n_I: 1,
+                    n_Q: 0,
                     n_R: 0,
                     n_F: 0,
                 },
@@ -374,6 +383,7 @@ impl Univ {
                     n_S: 1,
                     n_E: 0,
                     n_I: 0,
+                    n_Q: 0,
                     n_R: 0,
                     n_F: 0,
                 },

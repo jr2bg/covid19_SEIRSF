@@ -77,6 +77,49 @@ pub fn i2rf(pers: &mut Pers, config: &Config) {
     pers.set_p_state(State::I);
 }
 
+pub fn i2qrf(pers: &mut Pers, config: &Config) {
+    let rand_numb: f32 = thread_rng().gen();
+    let fat_risk = config.case_fat_risk;
+    // let fat_risk = get_p_f(pers.t_state);
+
+    //} else if rand_numb <= config.case_fat_risk && pers.t_state >= config.t_F {
+    if rand_numb <= fat_risk {
+        pers.set_state(State::F);
+        pers.set_t_state(0);
+    //if rand_numb <= config.p_R && pers.t_state >= config.t_R {
+    } else if rand_numb <= get_p_r(pers.t_state) + fat_risk {
+        // cambiar a cero o 1 el t_state
+        pers.set_state(State::R);
+        pers.set_t_state(0);
+    } else if rand_numb <= get_p_r(pers.t_state) + fat_risk + config.p_q{
+        pers.set_state(State::Q);
+        pers.set_t_state(0);
+    } else {
+        pers.add_time_state(1);
+    }
+    pers.set_p_state(State::I);
+}
+
+pub fn q2rf(pers: &mut Pers, config: &Config) {
+    let rand_numb: f32 = thread_rng().gen::<f32>();
+    let fat_risk = config.case_fat_risk;
+    // let fat_risk = get_p_f(pers.t_state);
+
+    //} else if rand_numb <= config.case_fat_risk && pers.t_state >= config.t_F {
+    if rand_numb <= fat_risk {
+        pers.set_state(State::F);
+        pers.set_t_state(0);
+    //if rand_numb <= config.p_R && pers.t_state >= config.t_R {
+    } else if rand_numb <= get_p_r(pers.t_state) + fat_risk {
+        // cambiar a cero o 1 el t_state
+        pers.set_state(State::R);
+        pers.set_t_state(0);
+    } else {
+        pers.add_time_state(1);
+    }
+    pers.set_p_state(State::I);
+}
+
 pub fn r2s(pers: &mut Pers, config: &Config) {
     let rand_numb: f32 = thread_rng().gen();
     if rand_numb <= config.p_S && pers.t_state >= config.t_S {

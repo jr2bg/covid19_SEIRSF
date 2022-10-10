@@ -10,7 +10,8 @@ pub fn single_evo(univ: &mut Univ, config: &Config, persons: &mut Vec<Pers>) {
         match pers.state {
             State::S => trans_fns::s2e(pers, univ, config),
             State::E => trans_fns::e2i(pers),
-            State::I => trans_fns::i2rf(pers, config),
+            State::I => trans_fns::i2qrf(pers, config),
+            State::Q => trans_fns::q2rf(pers, config),
             State::R => trans_fns::r2s(pers, config),
             State::F => trans_fns::f2f(pers),
         }
