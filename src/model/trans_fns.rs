@@ -22,7 +22,7 @@ pub fn s2e(pers: &mut Pers, univ: &mut Univ, config: &Config) {
 
     // union of independent events
     // let tot_p_e: f32 = p_e_neigh + p_e_cell - p_e_cell * p_e_neigh;
-    let tot_p_e: f32 = n_inf_cell as f32 / 8.0;
+    let tot_p_e: f32 = n_inf_ngbh as f32 / 8.0;
 
     /*
     // depending the number of munimun infectious people there will be a change
