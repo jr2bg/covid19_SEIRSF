@@ -5,9 +5,12 @@ use covid19_SEIRSF::Univ;
 
 use crate::model::trans_fns;
 
+/// One iteration of the CA
 pub fn single_evo(univ: &mut Univ, config: &Config, persons: &mut Vec<Pers>) {
+    // indexes of all deceased people
     let mut dec_indexes: Vec<usize> = vec![];
 
+    // Transition functions depending the state of the person
     //for pers in &mut *persons {
     for (i, pers) in persons.iter_mut().enumerate() {
         match pers.state {
@@ -23,13 +26,14 @@ pub fn single_evo(univ: &mut Univ, config: &Config, persons: &mut Vec<Pers>) {
         }
     }
     
+    // Remove persons to be considered for the next iteration
     let mut j = 0;
     for i in dec_indexes {
         persons.remove(i - j);
         j += 1;
     }
 
-    // update pers positions in univ
+    // Consider the displacement of a person
     for pers in persons {
         univ.get_cell(&pers.curr_pos).subs_state(&pers.p_state);
         univ.get_cell(&pers.curr_pos).add_state(&pers.state);

@@ -7,13 +7,14 @@ use std::fs;
 use rand::seq::SliceRandom;
 use rand::{thread_rng, Rng};
 
-/// Structure for the position of a cell
+/// Coordinates of a cell
 #[derive(Debug, Clone, Copy)]
 pub struct Pos {
     pub r: usize,
     pub c: usize,
 }
 
+/// Cell: ammount of people per state in one place
 #[derive(Debug, Clone, Copy, Serialize)]
 pub struct Cell {
     pub n_S: i32,
@@ -24,6 +25,7 @@ pub struct Cell {
     pub n_F: i32,
 }
 
+/// Configuration of the variables
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Config {
     pub n_rows: i32,
@@ -50,10 +52,12 @@ pub struct Config {
     pub p_q: f32,
 }
 
+/// Tesselation to be simulated
 pub struct Univ {
     pub tess: Vec<Vec<Cell>>,
 }
 
+/// Set of states, from the CA
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum State {
     S,
@@ -64,6 +68,7 @@ pub enum State {
     F,
 }
 
+/// Characteristics that identify a person
 #[derive(Debug, Clone, Copy)]
 pub struct Pers {
     pub origin_pos: Pos,

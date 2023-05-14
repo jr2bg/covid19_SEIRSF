@@ -4,6 +4,7 @@ use std::fs;
 
 use serde::Serialize;
 
+/// Data to be exported for each iteration
 #[derive(Debug, Serialize)]
 pub struct RecordDec {
     time: i32,

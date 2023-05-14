@@ -76,3 +76,12 @@ graph LR
 ```
 ## Resultados
 El desarrollo del trabajo puede consultarse en este [link](https://colab.research.google.com/drive/1dQ1IzfksXKOPKKdMheemBoCdNQRtMEH4#scrollTo=qfjUKLjkT6Yw).
+
+## Uso
+- `script_runs.ps1`: ejecuta el código usando la configuración dada en `model_config.toml`
+
+La ruta de almacenamiento de archivos está dada [aquí](./src/model/total_iter.rs), en la función `create_folder()`.
+La ruta en G indica que se subirá a la nube, mientras que en E indica que es almacenamiento en un disco duro local.
+El almacenamiento en nube llega a ser tardado, por ello llega a ser preferible el local.
+
+Los _runs_ se hacen 5 veces, entonces debe de generarse una nueva carpeta que contenga a esas 5 simulaciones.

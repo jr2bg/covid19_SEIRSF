@@ -15,6 +15,8 @@ pub fn iter(univ: &mut Univ, config: &Config, persons: &mut Vec<Pers>, folder: &
     let mut records_dec: Vec<exp_dec_data::RecordDec> = Vec::with_capacity(n_cycles as usize);
 
     for i in 0..n_cycles {
+
+        // randomly displace persons
         for pers in &mut *persons {
             // function to determine if we have to displace the person
             if pers.state != State::F && pers.will_be_displ(config) {
@@ -22,10 +24,16 @@ pub fn iter(univ: &mut Univ, config: &Config, persons: &mut Vec<Pers>, folder: &
             }
         }
 
+        // one iteration of the CA
         one_iter::single_evo(univ, config, persons);
+
+        // update number of deceased
         n_dec += univ.get_n_dec();
+
+        // update the file of deceased
         records_dec.push(exp_dec_data::RecordDec::new(i, n_dec));
 
+        // return person to its original position
         for pers in &mut *persons {
             if pers.is_displ {
                 displ::retrn(univ, pers);
@@ -37,6 +45,7 @@ pub fn iter(univ: &mut Univ, config: &Config, persons: &mut Vec<Pers>, folder: &
         };*/
     }
 
+    // export deceased data
     match exp_dec_data::write_results(records_dec, &folder) {
         Ok(_) => (),
         Err(_) => println!("couldn't export decease time series"),
@@ -49,10 +58,11 @@ pub fn iter(univ: &mut Univ, config: &Config, persons: &mut Vec<Pers>, folder: &
     */
 }
 
+/// Creates the folder where the data will be stored
 pub fn create_folder() -> path::PathBuf {
     let folderpath = path::PathBuf::from(
-        //r"G:\Mi unidad\Tesis\A22\models\covid19_SEIRSF\data_runs"
-        r"E:\rust\thesis\data_runs"
+        r"G:\Mi unidad\Tesis\A22\models\covid19_SEIRSF\data_runs"
+        //r"E:\rust\thesis\data_runs"
     );
     let now: chrono::DateTime<chrono::Utc> = chrono::Utc::now();
     let folder = format!("{}", now.format("%Y%m%d_%H%M%S"));
