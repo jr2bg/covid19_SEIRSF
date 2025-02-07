@@ -5,13 +5,44 @@ use covid19_SEIRSF::Univ;
 
 use crate::model::trans_fns;
 
+// evolution from seisqf
+pub fn evo_seisqf(univ: &mut Univ, config: &Config, persons: &mut Vec<Pers>){
+    // pass `dec_indexes`
+    for (i, pers) in persons.iter_mut().enumerate() {
+        match pers.state {
+            State::S => trans_fns::s2e(pers, univ, config),
+            State::E => trans_fns::e2i(pers),
+            State::I => trans_fns::i2qrf(pers, config),
+            State::Q => trans_fns::q2rf(pers, config),
+            State::R => trans_fns::r2s(pers, config),
+            State::F => {
+                univ.get_cell(&pers.curr_pos).subs_state(&State::F);
+                dec_indexes.push(i);
+            },
+        }
+    }
+}
+
+// evolution from seisf
+// TODO: check how to change the state F
+pub fn evo_seisf(univ: &mut Univ, config: &Config, persons: &mut Vec<Pers>){
+    for pers in &mut *persons {
+        match pers.state {
+            State::S => trans_fns::s2e(pers, univ, config),
+            State::E => trans_fns::e2i(pers),
+            State::I => trans_fns::i2sf(pers, config),
+            State::F => trans_fns::f2f(pers),
+            _ => (),
+        }
+    }
+}
+
 /// One iteration of the CA
 pub fn single_evo(univ: &mut Univ, config: &Config, persons: &mut Vec<Pers>) {
     // indexes of all deceased people
     let mut dec_indexes: Vec<usize> = vec![];
 
     // Transition functions depending the state of the person
-    //for pers in &mut *persons {
     for (i, pers) in persons.iter_mut().enumerate() {
         match pers.state {
             State::S => trans_fns::s2e(pers, univ, config),
