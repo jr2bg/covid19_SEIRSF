@@ -59,16 +59,25 @@ pub fn iter(univ: &mut Univ, config: &Config, persons: &mut Vec<Pers>, folder: &
 }
 
 /// Creates the folder where the data will be stored
-pub fn create_folder() -> path::PathBuf {
-    let folderpath = path::PathBuf::from(
-        r"G:\Mi unidad\Tesis\A22\models\covid19_SEIRSF\data_runs"
-        //r"E:\rust\thesis\data_runs"
-    );
+/// If in_cloud, a folder in `G will be created`
+/// Else, the folder will be stored in a external hard disk
+pub fn create_folder(in_cloud: bool) -> path::PathBuf {
+
+    // selects the location depending on the passed value
+    let location = if in_cloud { 
+        r"G:\Mi unidad\Tesis\A22\models\covid19_SEIRSF\data_runs" 
+    } else { 
+        r"E:\rust\thesis\data_runs"
+    };
+
+    // create the path for the corresponding input
+    let folderpath = path::PathBuf::from(location);
     let now: chrono::DateTime<chrono::Utc> = chrono::Utc::now();
     let folder = format!("{}", now.format("%Y%m%d_%H%M%S"));
     let folder = folderpath.join(&folder);
     //let folder = path::PathBuf::from(&folder);
 
+    // create the folder
     fs::create_dir(&folder).unwrap();
 
     return folder;
