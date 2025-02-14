@@ -1,8 +1,8 @@
-use covid19_SEIRSF::Config;
-use covid19_SEIRSF::Pers;
-use covid19_SEIRSF::State;
-use covid19_SEIRSF::Univ;
-use covid19_SEIRSF::Model;
+use covid19_spatiotemp_simulator::Config;
+use covid19_spatiotemp_simulator::Pers;
+use covid19_spatiotemp_simulator::State;
+use covid19_spatiotemp_simulator::Univ;
+use covid19_spatiotemp_simulator::Model;
 
 use crate::model::trans_fns;
 
@@ -11,7 +11,7 @@ pub fn evo_seiqsf(
     univ: &mut Univ,
     config: &Config,
     persons: &mut Vec<Pers>,
-    dec_index: &mut Vec<usize>
+    dec_indexes: &mut Vec<usize>
 ){
     // consider all the persons in the model
     for (i, pers) in persons.iter_mut().enumerate() {
@@ -39,7 +39,7 @@ pub fn evo_seisf(
     univ: &mut Univ,
     config: &Config,
     persons: &mut Vec<Pers>,
-    dec_index: &mut Vec<usize>
+    dec_indexes: &mut Vec<usize>
 ){
     for (i, pers) in persons.iter_mut().enumerate() {
         match pers.state {
@@ -62,7 +62,7 @@ pub fn evo_seisf(
 
 /// One iteration of the CA
 pub fn single_evo(
-    model: Model,
+    model: &Model,
     univ: &mut Univ,
     config: &Config,
     persons: &mut Vec<Pers>
@@ -73,8 +73,8 @@ pub fn single_evo(
 
     // apply the transition functions according to the passed model
     match model {
-        Model::SEIQSF => evo_seiqsf(univ, config, persons, dec_index),
-        Model::SEISF => evo_seisf(univ, config, persons, dec_index),
+        Model::SEIQSF => evo_seiqsf(univ, config, persons,&mut dec_indexes),
+        Model::SEISF => evo_seisf(univ, config, persons,&mut dec_indexes),
     }
     
     // remove deceased persons for the next iterations

@@ -1,10 +1,10 @@
 // Module for the transition functions of the CA
 use rand::{thread_rng, Rng};
 
-use covid19_SEIRSF::Config;
-use covid19_SEIRSF::Pers;
-use covid19_SEIRSF::State;
-use covid19_SEIRSF::Univ;
+use covid19_spatiotemp_simulator::Config;
+use covid19_spatiotemp_simulator::Pers;
+use covid19_spatiotemp_simulator::State;
+use covid19_spatiotemp_simulator::Univ;
 
 // Multiply p_E times the number of elements in E or I in its ngh
 // chech with random number

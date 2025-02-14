@@ -1,7 +1,7 @@
-use covid19_SEIRSF::Config;
-use covid19_SEIRSF::Pers;
-use covid19_SEIRSF::Pos;
-use covid19_SEIRSF::Univ;
+use covid19_spatiotemp_simulator::Config;
+use covid19_spatiotemp_simulator::Pers;
+use covid19_spatiotemp_simulator::Pos;
+use covid19_spatiotemp_simulator::Univ;
 
 pub fn displace(univ: &mut Univ, pers: &mut Pers, config: &Config) {
     let mut curr_pos: Pos = Pos::get_rand_pos(config);

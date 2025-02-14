@@ -1,10 +1,10 @@
-use covid19_SEIRSF::Config;
-use covid19_SEIRSF::Univ;
-use covid19_SEIRSF::Model;
+use covid19_spatiotemp_simulator::Config;
+use covid19_spatiotemp_simulator::Univ;
+use covid19_spatiotemp_simulator::Model;
 use std::fs;
 use toml;
 use clap::{ArgGroup, Parser};
-use log::{info, warn};
+// use log::{info, warn};
 
 mod model;
 pub use crate::model::displ;
@@ -12,6 +12,9 @@ use crate::model::total_iter;
 
 /// Program to simulate the spatio-temporal dynamics of COVID using
 /// different models
+/// structure for the CLI arguments. It contains
+/// - model to be simulated
+/// - directory where the results will be stored
 #[derive(Parser, Debug)]
 #[clap(author, version, about, long_about = None)]
 #[clap(group(
@@ -19,10 +22,6 @@ use crate::model::total_iter;
                 .required(true)
                 .args(&["seiqsf", "seisf"]),
         ))]
-/// structure for the CLI arguments. It contains
-/// - model to be simulated
-/// - directory where the results will be stored
-#[derive(Parser)]
 struct Cli {
     #[clap(parse(from_os_str))]
     path: Option<std::path::PathBuf>,
@@ -87,5 +86,5 @@ fn main() {
     };*/   
 
     // compute the simulation for the steps given
-    total_iter::iter_seiqsf(&model, &mut univ, &config, &mut persons, &folder);
+    total_iter::iter(&model, &mut univ, &config, &mut persons, &folder);
 }

@@ -1,10 +1,10 @@
 use std::{fs, path};
 
-use covid19_SEIRSF::Config;
-use covid19_SEIRSF::Pers;
-use covid19_SEIRSF::Univ;
-use covid19_SEIRSF::State;
-use covid19_SEIRSF::Model;
+use covid19_spatiotemp_simulator::Config;
+use covid19_spatiotemp_simulator::Pers;
+use covid19_spatiotemp_simulator::Univ;
+use covid19_spatiotemp_simulator::State;
+use covid19_spatiotemp_simulator::Model;
 
 use crate::displ;
 use crate::model::exp_dec_data;
