@@ -52,6 +52,12 @@ pub struct Config {
     pub p_q: f32,
 }
 
+/// possible models
+pub enum Model {
+    SEIQSF,
+    SEISF
+}
+
 /// Tesselation to be simulated
 pub struct Univ {
     pub tess: Vec<Vec<Cell>>,
@@ -155,6 +161,7 @@ impl Pos {
     }
 }
 
+/// number of individuals in each state in one element of area
 impl Cell {
     pub fn new() -> Cell {
         Cell {
@@ -244,6 +251,7 @@ impl Config {
 }
 
 impl Univ {
+    /// initialize the universe
     pub fn init(n_rows: i32, n_cols: i32) -> Univ {
         let mut univ: Univ = Univ {
             tess: vec![vec![Cell::new()]],
@@ -253,10 +261,12 @@ impl Univ {
         return univ;
     }
 
+    /// gets the cell for the given position
     pub fn get_cell(&mut self, pos: &Pos) -> &mut Cell {
         &mut self.tess[(*pos).r][(*pos).c]
     }
 
+    /// sets the cell in a given position
     pub fn set_cell(&mut self, pos: &Pos, cell: Cell) {
         self.tess[(*pos).r][(*pos).c] = cell;
     }

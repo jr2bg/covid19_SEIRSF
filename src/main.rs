@@ -1,5 +1,6 @@
 use covid19_SEIRSF::Config;
 use covid19_SEIRSF::Univ;
+use covid19_SEIRSF::Model;
 use std::fs;
 use toml;
 use clap::{ArgGroup, Parser};
@@ -16,7 +17,7 @@ use crate::model::total_iter;
 #[clap(group(
             ArgGroup::new("exec")
                 .required(true)
-                .args(&["seiqfs", "seisf"]),
+                .args(&["seiqsf", "seisf"]),
         ))]
 /// structure for the CLI arguments. It contains
 /// - model to be simulated
@@ -32,7 +33,7 @@ struct Cli {
 
     /// seiqfs model
     #[clap(long)]
-    seiqfs: bool,
+    seiqsf: bool,
 
     /// seisf model
     #[clap(long)]
@@ -48,6 +49,15 @@ fn main() {
     let args = Cli::parse();
 
     let config: Config = toml::from_str(&content).unwrap();
+
+    // get the desired model
+    let model = if args.seiqsf {
+        Model::SEIQSF
+    }  else if args.seisf {
+        Model::SEISF
+    } else {
+        panic!("Given model not available")
+    };
     //in this case, set p_e: config.get_p_e();
 
     // initialize the universe with the appropriate size
@@ -74,16 +84,8 @@ fn main() {
     /*match univ.export(0, &folder) {
         Ok(_) => (),
         Err(_) => println!("couldn't export universe"),
-    };*/
+    };*/   
 
     // compute the simulation for the steps given
-    // model seiqsf
-    if args.seiqsf {
-        total_iter::iter_seiqsf(&mut univ, &config, &mut persons, &folder);
-    // model seisf
-    } else if args.seisf {
-        total_iter::iter_seisf(&mut univ, &config, &mut persons, &folder);
-    }  else {
-        panic!("model given not available");
-    }
+    total_iter::iter_seiqsf(&model, &mut univ, &config, &mut persons, &folder);
 }

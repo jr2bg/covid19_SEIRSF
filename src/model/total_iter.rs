@@ -4,12 +4,13 @@ use covid19_SEIRSF::Config;
 use covid19_SEIRSF::Pers;
 use covid19_SEIRSF::Univ;
 use covid19_SEIRSF::State;
+use covid19_SEIRSF::Model;
 
 use crate::displ;
 use crate::model::exp_dec_data;
 use crate::model::one_iter;
 
-pub fn iter(univ: &mut Univ, config: &Config, persons: &mut Vec<Pers>, folder: &path::PathBuf) {
+pub fn iter(model: &Model ,univ: &mut Univ, config: &Config, persons: &mut Vec<Pers>, folder: &path::PathBuf) {
     let mut n_dec: i32 = 0;
     let n_cycles: i32 = (*config).n_cycles;
     let mut records_dec: Vec<exp_dec_data::RecordDec> = Vec::with_capacity(n_cycles as usize);
@@ -25,7 +26,7 @@ pub fn iter(univ: &mut Univ, config: &Config, persons: &mut Vec<Pers>, folder: &
         }
 
         // one iteration of the CA
-        one_iter::single_evo(univ, config, persons);
+        one_iter::single_evo(model,univ, config, persons);
 
         // update number of deceased
         n_dec += univ.get_n_dec();
