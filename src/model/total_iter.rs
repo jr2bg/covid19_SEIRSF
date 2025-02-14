@@ -62,8 +62,11 @@ pub fn iter(model: &Model ,univ: &mut Univ, config: &Config, persons: &mut Vec<P
 /// Creates the folder where the data will be stored
 /// If in_cloud, a folder in `G will be created`
 /// Else, the folder will be stored in a external hard disk
-pub fn create_folder(in_cloud: bool) -> path::PathBuf {
-
+pub fn create_folder(in_cloud: bool,model: &Model) -> path::PathBuf {
+    let model_prefix = match model {
+        Model::SEIQSF => "seiqsf_",
+        Model::SEISF => "seisf_",
+    };
     // selects the location depending on the passed value
     let location = if in_cloud { 
         r"G:\Mi unidad\Tesis\A22\models\covid19_SEIRSF\data_runs" 
@@ -74,7 +77,10 @@ pub fn create_folder(in_cloud: bool) -> path::PathBuf {
     // create the path for the corresponding input
     let folderpath = path::PathBuf::from(location);
     let now: chrono::DateTime<chrono::Utc> = chrono::Utc::now();
-    let folder = format!("{}", now.format("%Y%m%d_%H%M%S"));
+    let folder = format!(
+        "{}{}",
+        model_prefix,
+        now.format("%Y%m%d_%H%M%S"));
     let folder = folderpath.join(&folder);
     //let folder = path::PathBuf::from(&folder);
 

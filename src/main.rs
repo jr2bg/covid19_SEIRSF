@@ -77,7 +77,10 @@ fn main() {
         },
     };
 
-    let folder = total_iter::create_folder(args.cloud);
+    let folder = total_iter::create_folder(
+        args.cloud,
+        &model
+    );
     config.export(&folder);
 
     /*match univ.export(0, &folder) {
