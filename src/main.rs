@@ -23,11 +23,11 @@ use crate::model::total_iter;
                 .args(&["seiqsf", "seisf"]),
         ))]
 struct Cli {
-    #[clap(parse(from_os_str))]
+    #[clap(long)]
     path: Option<std::path::PathBuf>,
 
     /// save in the cloud
-    #[clap(short,long,default_value_t=false)]
+    #[clap(long)]
     cloud : bool,
 
     /// seiqfs model
@@ -76,7 +76,7 @@ fn main() {
             univ.populate_poss_mult_pers_one_cell(&config)
         },
     };
-
+    println!("{:?}",args);
     let folder = total_iter::create_folder(
         args.cloud,
         &model

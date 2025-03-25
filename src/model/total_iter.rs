@@ -71,7 +71,7 @@ pub fn create_folder(in_cloud: bool,model: &Model) -> path::PathBuf {
     let location = if in_cloud { 
         r"G:\Mi unidad\Tesis\A22\models\covid19_SEIRSF\data_runs" 
     } else { 
-        r"E:\rust\thesis\data_runs"
+        r"D:\rust\thesis\data_runs"
     };
 
     // create the path for the corresponding input

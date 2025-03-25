@@ -4,7 +4,8 @@ En este proyecto, se usará un modelo de _autómata celular_ (AC) para el covid-
 
 ## Objetivos
 ### Objetivo general
-- [] Determinar ...
+- [ ] Determinar si las medidas tomadas lograron disminuir los fallecimientos, comparado con que no se hubieran implementado
+- [ ] 
 
 ### Objetivos específicos
 - [x] Comparar resultados del modelo con datos reales (para algunos casos)
@@ -85,3 +86,8 @@ La ruta en G indica que se subirá a la nube, mientras que en E indica que es al
 El almacenamiento en nube llega a ser tardado, por ello llega a ser preferible el local.
 
 Los _runs_ se hacen 5 veces, entonces debe de generarse una nueva carpeta que contenga a esas 5 simulaciones.
+
+# usage
+```
+cargo run --release -- <--seiqsf|--seirsf> [OPT] --cloud
+```
