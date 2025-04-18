@@ -21,8 +21,10 @@ pub fn s2e(pers: &mut Pers, univ: &mut Univ, config: &Config) {
     let p_e_neigh: f32 = get_cum_geo_distr(p_e, n_inf_ngbh);
 
     // union of independent events
-    // let tot_p_e: f32 = p_e_neigh + p_e_cell - p_e_cell * p_e_neigh;
-    let tot_p_e: f32 = n_inf_ngbh as f32 / 8.0;
+    let tot_p_e: f32 = p_e_neigh + p_e_cell - p_e_cell * p_e_neigh;
+
+    // here, the contagion does not depend on R0
+    //let tot_p_e: f32 = n_inf_ngbh as f32 / 8.0;
 
     /*
     // depending the number of munimun infectious people there will be a change

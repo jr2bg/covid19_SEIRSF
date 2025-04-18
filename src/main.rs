@@ -90,4 +90,5 @@ fn main() {
 
     // compute the simulation for the steps given
     total_iter::iter(&model, &mut univ, &config, &mut persons, &folder);
+    println!("Files exported to: {:?}", folder);
 }

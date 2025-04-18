@@ -89,5 +89,5 @@ Los _runs_ se hacen 5 veces, entonces debe de generarse una nueva carpeta que co
 
 # usage
 ```
-cargo run --release -- <--seiqsf|--seirsf> [OPT] --cloud
+cargo run --release -- <--seiqsf|--seisf> [OPT] --cloud --path <path>
 ```
