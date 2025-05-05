@@ -1,22 +1,26 @@
 use std::error::Error;
-use std::io;
+use std::path;
+use std::fs;
 
 use serde::Serialize;
 
+/// Data to be exported for each iteration
 #[derive(Debug, Serialize)]
-pub struct Record_Dec {
-    time : i32,
-    total_n_dec : i32,
+pub struct RecordDec {
+    time: i32,
+    total_n_dec: i32,
 }
 
-impl Record_Dec {
-    pub fn new(time: i32, total_n_dec: i32) -> Record_Dec {
-        Record_Dec { time, total_n_dec }
+impl RecordDec {
+    pub fn new(time: i32, total_n_dec: i32) -> RecordDec {
+        RecordDec { time, total_n_dec }
     }
 }
 
-pub fn write_results(records : Vec<Record_Dec>) -> Result<(), Box<dyn Error>> {
-    let mut wtr = csv::Writer::from_writer(io::stdout());
+pub fn write_results(records: Vec<RecordDec>,  folder: &path::PathBuf) -> Result<(), Box<dyn Error>> {
+    let file = folder.join("results.csv");
+    //let mut wtr = csv::Writer::from_writer(io::stdout());
+    let mut wtr = csv::Writer::from_path(file)?;
 
     // When writing records with Serde using structs, the header row is written
     // automatically.
@@ -25,5 +29,11 @@ pub fn write_results(records : Vec<Record_Dec>) -> Result<(), Box<dyn Error>> {
     }
 
     wtr.flush()?;
+    Ok(())
+}
+
+pub fn _copy_config(folder: &path::PathBuf) -> std::io::Result<()>{
+    let file = folder.join("model_config.toml");
+    fs::copy("model_config.toml", file)?;  // Copy foo.txt to bar.txt
     Ok(())
 }

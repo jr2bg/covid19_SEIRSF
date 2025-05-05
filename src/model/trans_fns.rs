@@ -1,29 +1,39 @@
 // Module for the transition functions of the CA
 use rand::{thread_rng, Rng};
 
-use covid19_SEIRSF::Univ;
-use covid19_SEIRSF::Pers;
-use covid19_SEIRSF::Config;
-use covid19_SEIRSF::State;
+use covid19_spatiotemp_simulator::Config;
+use covid19_spatiotemp_simulator::Pers;
+use covid19_spatiotemp_simulator::State;
+use covid19_spatiotemp_simulator::Univ;
 
 // Multiply p_E times the number of elements in E or I in its ngh
 // chech with random number
-pub fn s2e(pers: &mut Pers, univ : &mut Univ, config: &Config){
+pub fn s2e(pers: &mut Pers, univ: &mut Univ, config: &Config) {
     let n_inf_ngbh = univ.get_n_inf_ngbh(&pers.curr_pos, config);
     // CONSIDER IF WE ONLY TAKE I OR BOTH I AND E
-    let n_inf_cell = univ.get_cell(&pers.curr_pos).n_E + 
-        univ.get_cell(&pers.curr_pos).n_I;
+    let n_inf_cell = univ.get_cell(&pers.curr_pos).n_E + univ.get_cell(&pers.curr_pos).n_I;
+    let rand_numb: f32 = thread_rng().gen::<f32>();
+    //let p_e: f32 = 0.05;
+    let p_e: f32 = config.p_e;
+    //let p_e_cell: f32 = 0.0;
+    let p_e_cell: f32 = get_cum_p_e_cell(p_e, n_inf_cell);
+    //let p_e_neigh: f32 = 0.0;
+    let p_e_neigh: f32 = get_cum_geo_distr(p_e, n_inf_ngbh);
 
-    let rand_numb : f32 = thread_rng().gen::<f32>();
-    
-    let tot_pop :f32 = (config.n_cols * config.n_cols) as f32 * 
-        config.pop_dens;
+    // union of independent events
+    let tot_p_e: f32 = p_e_neigh + p_e_cell - p_e_cell * p_e_neigh;
 
-    //let p_e : f32 = config.R_0 / 
-    //    ( tot_pop * config.time_contagious as f32 );
-    let p_e = 0.5;
+    // here, the contagion does not depend on R0
+    //let tot_p_e: f32 = n_inf_ngbh as f32 / 8.0;
 
-    let tot_p_e : f32 = (n_inf_ngbh + 2 * n_inf_cell) as f32 *p_e  ;
+    /*
+    // depending the number of munimun infectious people there will be a change
+    // in state or not
+    if n_inf_ngbh < config.min_infectious {
+        pers.set_p_state(State::S);
+        return;
+    }
+    */
 
     // falta considerar el número total de personas
     // usar dens_pob*n_rows*n_cols
@@ -34,12 +44,12 @@ pub fn s2e(pers: &mut Pers, univ : &mut Univ, config: &Config){
     pers.set_p_state(State::S);
 }
 
-
-pub fn e2i(pers: &mut Pers, p_Is: Vec<f32>){
+pub fn e2i(pers: &mut Pers) {
+    let ps_i: Vec<f32> = get_ps_i();
     // no consideramos un tiempo
-    let rand_numb : f32 = thread_rng().gen::<f32>();
+    let rand_numb: f32 = thread_rng().gen::<f32>();
 
-    if rand_numb <= p_Is[pers.t_state as usize] {
+    if rand_numb <= ps_i[pers.t_state as usize] {
         // cambiar a cero o 1 el t_state
         pers.set_state(State::I);
         pers.set_t_state(0);
@@ -49,16 +59,17 @@ pub fn e2i(pers: &mut Pers, p_Is: Vec<f32>){
     pers.set_p_state(State::E);
 }
 
-
 pub fn i2rf(pers: &mut Pers, config: &Config) {
-    let rand_numb : f32 = thread_rng().gen::<f32>();
-    
+    let rand_numb: f32 = thread_rng().gen::<f32>();
+    let fat_risk = config.case_fat_risk;
+    // let fat_risk = get_p_f(pers.t_state);
+
     //} else if rand_numb <= config.case_fat_risk && pers.t_state >= config.t_F {
-    if rand_numb <= config.case_fat_risk{
+    if rand_numb <= fat_risk {
         pers.set_state(State::F);
-        pers.set_t_state(0); 
+        pers.set_t_state(0);
     //if rand_numb <= config.p_R && pers.t_state >= config.t_R {
-    } else if rand_numb <= config.p_R + config.case_fat_risk {
+    } else if rand_numb <= get_p_r(pers.t_state) + fat_risk {
         // cambiar a cero o 1 el t_state
         pers.set_state(State::R);
         pers.set_t_state(0);
@@ -68,9 +79,70 @@ pub fn i2rf(pers: &mut Pers, config: &Config) {
     pers.set_p_state(State::I);
 }
 
+pub fn i2qrf(pers: &mut Pers, config: &Config) {
+    let rand_numb: f32 = thread_rng().gen();
+    let fat_risk = config.case_fat_risk;
+    // let fat_risk = get_p_f(pers.t_state);
 
+    //} else if rand_numb <= config.case_fat_risk && pers.t_state >= config.t_F {
+    if rand_numb <= fat_risk {
+        pers.set_state(State::F);
+        pers.set_t_state(0);
+    //if rand_numb <= config.p_R && pers.t_state >= config.t_R {
+    } else if rand_numb <= get_p_r(pers.t_state) + fat_risk {
+        // cambiar a cero o 1 el t_state
+        pers.set_state(State::R);
+        pers.set_t_state(0);
+    } else if rand_numb <= get_p_r(pers.t_state) + fat_risk + config.p_q{
+        pers.set_state(State::Q);
+        pers.set_t_state(0);
+    } else {
+        pers.add_time_state(1);
+    }
+    pers.set_p_state(State::I);
+}
+
+pub fn q2rf(pers: &mut Pers, config: &Config) {
+    let rand_numb: f32 = thread_rng().gen::<f32>();
+    let fat_risk = config.case_fat_risk;
+    // let fat_risk = get_p_f(pers.t_state);
+
+    //} else if rand_numb <= config.case_fat_risk && pers.t_state >= config.t_F {
+    if rand_numb <= fat_risk {
+        pers.set_state(State::F);
+        pers.set_t_state(0);
+    //if rand_numb <= config.p_R && pers.t_state >= config.t_R {
+    } else if rand_numb <= get_p_r(pers.t_state) + fat_risk {
+        // cambiar a cero o 1 el t_state
+        pers.set_state(State::R);
+        pers.set_t_state(0);
+    } else {
+        pers.add_time_state(1);
+    }
+    pers.set_p_state(State::I);
+}
+
+// seisf transition
+pub fn i2sf(pers: &mut Pers, config: &Config) {
+    let rand_numb: f32 = thread_rng().gen::<f32>();
+
+    if rand_numb <= config.case_fat_risk {
+        pers.set_state(State::F);
+        pers.set_t_state(0);
+    } else if rand_numb <= get_p_r(pers.t_state) + config.case_fat_risk {
+    //} else if rand_numb <= 0.25 + config.case_fat_risk {
+        // cambiar a cero o 1 el t_state
+        pers.set_state(State::S);
+        pers.set_t_state(0);
+    } else {
+        pers.add_time_state(1);
+    }
+    pers.set_p_state(State::I);
+}
+
+// seisf transition
 pub fn r2s(pers: &mut Pers, config: &Config) {
-    let rand_numb : f32 = thread_rng().gen();
+    let rand_numb: f32 = thread_rng().gen();
     if rand_numb <= config.p_S && pers.t_state >= config.t_S {
         pers.set_state(State::S);
     }
@@ -83,7 +155,7 @@ pub fn f2f(pers: &mut Pers) {
 
 // list with the information to get the cdf of the normal distribution specified
 // in the article Lauer et al 2020
-pub fn get_p_Is() -> Vec<f32>{
+pub fn get_ps_i() -> Vec<f32> {
     vec![
         9.999999999999995e-05,
         0.005069057888351579,
@@ -116,15 +188,13 @@ pub fn get_p_Is() -> Vec<f32>{
         0.9998022415547547,
         0.9998471946417632,
         0.9998814873225667,
-        1.0
+        1.0,
     ]
 }
 
-
-pub fn get_p_R(t: i32) -> f32 {
-
+pub fn get_p_r(t: i32) -> f32 {
     if t < 10 {
-        return 0.0 ;
+        return 0.0;
     } else if t < 15 {
         return 0.046512;
     } else if t < 18 {
@@ -136,11 +206,43 @@ pub fn get_p_R(t: i32) -> f32 {
     } else if t < 23 {
         return 0.465116;
     } else if t < 25 {
-        return 0.477419
+        return 0.477419;
     } else if t < 27 {
         return 0.534884;
     } else if t < 37 {
         return 0.557634;
     }
     return 0.557634;
+}
+
+// iid events inside cell of person of interest
+pub fn get_cum_p_e_cell(p_e: f32, n_inf_cell: i32) -> f32 {
+    1.0 - (1.0 - p_e).powi(n_inf_cell)
+}
+
+// iid events for _external_ neighbourhood
+pub fn get_geo_distr(p: f32, k: i32) -> f32 {
+    (1.0 - p).powi(k - 1) * p
+}
+
+pub fn get_cum_geo_distr(p: f32, n: i32) -> f32 {
+    let mut p_tot: f32 = 0.0;
+    for k in 0..n {
+        p_tot += get_geo_distr(p, k)
+    }
+    return p_tot;
+}
+
+/// Returns the death probability p_F given a time
+/// 
+/// As the CA requires transition functions, the p_F corresponds to the 
+/// probability of passing from I to F in one iteration. Here, we consider
+/// p_F as a function of time
+pub fn get_p_f(t: i32) -> f32 {
+    match t {
+        6 | 7 | 14 | 15 => 0.00001,
+        8 | 9 | 12 | 13 => 0.00005,
+        10 | 11 => 0.0001,
+        _ => 0.0,
+    }
 }
